@@ -10,7 +10,7 @@ plots.sp<-SpatialPointsDataFrame(coords=cbind(plots$Longitude,plots$Latitude)[!i
 plots.sp.t<-sp::spTransform(plots.sp, proj.utm)
 
 #location of normalized las data
-las_dir<-"data/lidar/normalized"
+las_dir<-paste0(las_dir,"/normalized")
 
 #create another las catalog with normalized data
 ctg <- catalog(las_dir)

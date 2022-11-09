@@ -18,7 +18,9 @@ library(parallel)
 
 ## Download LiDAR data in R
 
-Now you'll need to download the lidar data used in this tutorial. We will be using an ALS dataset collected in the Zambezi Delta over a mangrove forest.
+Now you'll need to download the lidar data used in this tutorial. We will be using an ALS dataset collected in the Zambezi Delta over a mangrove forest. Here's a view of the area with lidar data overlayed in green:
+
+<img src="Google_Zambezi.png">
 
 Download the public lidar data from [here](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1521).
 
@@ -149,4 +151,63 @@ Let's visualize how the plots align with the lidar data.
 Below you can see the lidar data clipped to the plot areas. In this case we have a center plot and 4 other surrounding plots.
 
 <img src="lidar_preview_int_plot.png">
+
+## Derive LiDAR Statistics from Clipped Plots
+
+Since we now have plots clipped out of out lidar data we can compute some statistics from the cloud of points associated with each forest plot.
+
+As before, we need to point to the clipped plot-level lidar data.
+
+```{r}
+# Get plot-level LiDAR metrics
+
+#Set lidar plot directory
+las_dir<-paste0(las_dir,"/normalized/plots")
+las_files<-list.files(las_dir, pattern = "las")
+```
+
+Next we are creating an apply function and using it on the list of plot data. This function basically reads in the las data and derives a suite of useful statistical metrics from the point cloud. The `stdmetrics` computes this for us.
+
+```{r}
+#Extract lidar metrics from plot list
+metrics_ls<-lapply(1:length(las_files), function(x){
+  i<-x
+  
+  #read plot LAS file
+  las<-readLAS(list.files(las_dir, pattern = "las", full.names = TRUE)[i])
+  #set projection
+  crs(las)<-proj.utm
+  
+  #get LiDAR metrics
+  return(
+    
+    data.frame(ID = as.character(gsub(".las", "", las_files[i])), 
+                              cloud_metrics(las, stdmetrics(X,Y,Z,Intensity,ReturnNumber,Classification)),
+                              stringsAsFactors = FALSE)
+    )
+})
+
+metrics_all<-do.call(rbind,metrics_ls)
+```
+
+Next we must connect the plot-level data to our statistical metrics. We import the plot data, select the columns we want to include in our predictive model. Here we want to model biomass so we select the biomass density column and create a dataframe linking the plot ID and AGB. Finally we save the linked data for modeling later.
+
+```{r}
+#Match plot ID names
+metrics_all$Plot.Subplot<-as.character(plots.sp.t@data$Plot.Subplot)[as.numeric(metrics_all$ID)]
+
+#merge lidar metrics to plot data
+metrics_all.m<-merge(metrics_all, na.omit(data.frame(Plot=plots$Plot,
+                                                     Plot.Subplot=plots$Plot.Subplot,
+                                                     AGB=plots$Total.AGB,
+                                             height.mean=plots$mean_height,
+                                             height.max=plots$H100_field)), by="Plot.Subplot")
+
+#what is the noData value? Exclude those plot that do not overlap with lidar data
+metrics_all.m<-metrics_all.m[metrics_all.m$AGB<1000,]
+
+dir.create("output")
+write.csv(metrics_all.m, "output/metrics_all_m.csv", row.names = FALSE)
+```
+
 

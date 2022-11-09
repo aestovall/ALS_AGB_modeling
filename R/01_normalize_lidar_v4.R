@@ -12,11 +12,11 @@ library(parallel)
 
 
 #set directory for las files
-las_dir<-"data/lidar"
-las_files<-list.files(las_dir, pattern = ".las", full.names = TRUE)
+las_dir<-"data/lidar/CMS_LiDAR_Point_Cloud_Zambezi_1521/data"
+las_files<-list.files(las_dir, pattern = ".laz", full.names = TRUE)
 
 #what is the projection?
-proj.utm<-crs(readOGR(list.files(pattern="shp")))
+proj.utm<-crs(readOGR(list.files("data/lidar/",pattern="shp", full.names = TRUE)))
 
 #create a las catalog and set projection
 ctg <- catalog(las_files)

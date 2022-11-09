@@ -1,7 +1,7 @@
 # Get plot-level LiDAR metrics
 
 #Set lidar plot directory
-las_dir<-"data/lidar/normalized/plots"
+las_dir<-paste0(las_dir,"/plots")
 las_files<-list.files(las_dir, pattern = "las")
 
 #Extract lidar metrics from plot list
@@ -38,5 +38,6 @@ metrics_all.m<-merge(metrics_all, na.omit(data.frame(Plot=plots$Plot,
 #what is the noData value? Exclude those plot that do not overlap with lidar data
 metrics_all.m<-metrics_all.m[metrics_all.m$AGB<1000,]
 
+dir.create("output")
 write.csv(metrics_all.m, "output/metrics_all_m.csv", row.names = FALSE)
 
