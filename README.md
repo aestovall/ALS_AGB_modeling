@@ -387,7 +387,7 @@ writeRaster(agb.map,"output/agb_map.tif")
 
 Now we can look at the work we've done. Looks pretty good....
 
-<img src="google_agb.png">
+<img src="google_AGB.png">
 
 
 
