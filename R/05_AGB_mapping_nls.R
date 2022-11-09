@@ -1,9 +1,10 @@
 library(errors)
 
-las_dir<-"data/lidar/normalized"
+las_dir<-"data/lidar/CMS_LiDAR_Point_Cloud_Zambezi_1521/data"
+las_dir<-paste0(las_dir,"/normalized")
 las_files<-list.files(las_dir, pattern = ".las", full.names = TRUE)
 
-proj.utm<-crs(readOGR(list.files(pattern="shp")))
+proj.utm<-crs(readOGR(list.files("data/lidar/",pattern="shp", full.names = TRUE)))
 
 ctg <- catalog(las_files)
 crs(ctg)<-proj.utm
@@ -56,3 +57,12 @@ myfun = function(cluster, ...)
 }
 
 catalog_apply(ctg, myfun)
+
+agb.map<-do.call(merge,
+               lapply(
+                 list.files( paste0(las_dir, "/AGB_SubPlot_nls_model"), 
+                             full.names=TRUE, pattern="tif"), 
+                 raster)
+)
+
+writeRaster(agb.map,"output/agb_map.tif")

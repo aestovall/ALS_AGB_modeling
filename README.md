@@ -370,6 +370,25 @@ myfun = function(cluster, ...)
 catalog_apply(ctg, myfun)
 ```
 
+The LAST step is to read in and merge all of the individual raster tiles...
+
+<img src="star_wars.gif">
+
+```{r}
+agb.map<-do.call(merge,
+               lapply(
+                 list.files( paste0(las_dir, "/AGB_SubPlot_nls_model"), 
+                             full.names=TRUE, pattern="tif"), 
+                 raster)
+)
+
+writeRaster(agb.map,"output/agb_map.tif")
+```
+
+Now we can look at the work we've done. Looks pretty good....
+
+<img src="google_agb.png">
+
 
 
 

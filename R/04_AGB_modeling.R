@@ -8,14 +8,29 @@ metrics_all.m<-read.csv("output/metrics_all_m.csv")
 # 4) machine learning (randomForest)
 
 
-# 1) Linear Regression - what variables are important?
+# 1) Linear Regression 
+
+#build a linear regression
+lr.m<-lm(AGB~zmax, metrics_all.m)
+
+#check RMSE?
+sqrt(mean((predict(lr.m)-metrics_all.m$AGB)^2))/mean(metrics_all.m$AGB)
+sqrt(mean((predict(lr.m)-metrics_all.m$AGB)^2))
+
+#how does the model fit?
+plot(predict(lr.m), metrics_all.m$AGB)
+abline(0,1)
+
+# 2) Multi-Linear Regression - what variables are important?
+
 library(leaps)
 AGBreg<-regsubsets(AGB~., nbest=3, nvmax=5, data=metrics_all.m[,-c(1,2,8,59,61:62)], really.big = T)
 summary(AGBreg)
 plot(AGBreg)
 
 #build a multi-linear regression
-mlr.m<-lm(AGB~zmax+zsd+zq40, metrics_all.m)
+mlr.m<-lm(AGB~zmax+zsd, metrics_all.m)
+summary(mlr.m)
 
 #check RMSE?
 sqrt(mean((predict(mlr.m)-metrics_all.m$AGB)^2))/mean(metrics_all.m$AGB)
