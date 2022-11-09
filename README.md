@@ -292,4 +292,6 @@ sqrt(mean((predict(rf.m)-metrics_all.m$AGB)^2))
 plot(predict(rf.m), metrics_all.m$AGB)
 abline(0,1)
 ```
+<img src="nls_model_AGB.png">
+
 
