@@ -41,3 +41,9 @@ metrics_all.m<-metrics_all.m[metrics_all.m$AGB<1000,]
 dir.create("output")
 write.csv(metrics_all.m, "output/metrics_all_m.csv", row.names = FALSE)
 
+plot(metrics_all.m$height.mean[metrics_all.m$height.mean<100],
+     metrics_all.m$zmean[metrics_all.m$height.max<100])
+abline(0,1)
+
+hist(metrics_all.m$height.mean[metrics_all.m$height.mean<100])
+hist(metrics_all.m$zmean[metrics_all.m$height.max<100])
