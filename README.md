@@ -24,7 +24,7 @@ Now you'll need to download the lidar data used in this tutorial. We will be usi
 
 Download the public lidar data from [here](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1521).
 
-You will need to sign up/register for an EarthData account to get access to these lidar data. You can also download from this link [here]() (not guaranteed to be active).
+You will need to sign up/register for an EarthData account to get access to these lidar data. You can also download from this link [here](https://drive.google.com/file/d/1-IjC3QYsKl4HlLZEvIYNyU1g8YbklHKn/view?usp=share_link) (not guaranteed to be active).
 
 Once you have downloaded the lidar data place the files in the `data/lidar` directory.
 
